@@ -1,6 +1,8 @@
 var request = require('request');
 var expect = require('chai').expect;
 
+//Testing asynchronous code with Mocha is done by invoking a callback when the test is complete. Mocha will know that it should wait for this function to be called to complete the test.
+
 describe('server', function() {
   it('should respond to GET requests for /classes/messages with a 200 status code', function(done) {
     request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
@@ -33,7 +35,7 @@ describe('server', function() {
     });
   });
 
-  it('should accept POST requests to /classes/messages', function(done) {
+  it('should accept POST requests to /classes/messages and respond with a 201 status code', function(done) {
     var requestParams = {method: 'POST',
       uri: 'http://127.0.0.1:3000/classes/messages',
       json: {

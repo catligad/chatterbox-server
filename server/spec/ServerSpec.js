@@ -29,11 +29,10 @@ describe('Node Server Request Listener Function', function() {
 
     handler.requestHandler(req, res);
 
-    console.log('------------', res._data);
     expect(JSON.parse.bind(this, res._data)).to.not.throw();
     expect(res._ended).to.equal(true);
   });
-
+  
   it('Should send back an object', function() {
     var req = new stubs.request('/classes/messages', 'GET');
     var res = new stubs.response();

@@ -36,6 +36,8 @@ var requestHandler = function(request, response) {
       });
       statusCode = 201;
       response.writeHead(statusCode, headers);
+      console.log(statusCode, request.method)
+
       response.end(JSON.stringify(obj));
     } else if (request.method === 'OPTIONS') {
       statusCode = 200;
@@ -47,7 +49,6 @@ var requestHandler = function(request, response) {
     response.writeHead(statusCode, headers);
     response.end();
   }
-  return;
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
