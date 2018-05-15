@@ -11,56 +11,37 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var obj = {
+  results: [
+    {username: 'hamster', roomname: 'ball', text:'woo im in a ball', objectId: 3},
+    {username: 'bird', roomname: 'ball', text:'woo im in a bird'},
+  ]
+};
 
 var requestHandler = function(request, response) {
-  // Request and Response come from node's http module.
-  //
-  // They include information about both the incoming request, such as
-  // headers and URL, and about the outgoing response, such as its status
-  // and content.
-  //
-  // Documentation for both request and response can be found in the HTTP section at
-  // http://nodejs.org/documentation/api/
-
-  // Do some basic logging.
-  //
-  // Adding more logging to your server can be an easy way to get passive
-  // debugging help, but you should always be careful about leaving stray
-  // console.logs in your code.
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  // .writeHead() writes to the request line and headers of the response,
-  // which includes the status and all headers.
-
-
-  var obj = {results: [{username: 'hamster', roomname: 'ball', text:'woo im in a ball'}]};
-  
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'json';
   var statusCode = 200;
   response.writeHead(statusCode, headers);
 
-
   if (request.method === 'GET') {
     if (request.url === '/chatterbox/classes/messages') {
-    response.write(JSON.stringify(obj));
-    response.end();
-  }
+      response.end(JSON.stringify(obj));
+    }
   }
 
   if (request.method === 'POST'){
     if (request.url === '/chatterbox/classes/messages') {
-      console.log('MAINREQUEST', request)
-
-      var testobj = {username: 'dog', roomname: 'floor', text:'woo im the lava'};
-      obj.results.push(testobj);
-      response.write(JSON.stringify(obj));
-      response.end();
+      let body = [];
+      request.on('data', (chunk) => {
+        body.push(chunk);
+      }).on('end', () => {
+        body = Buffer.concat(body).toString();
+        obj.results.push(JSON.parse(body));
+      });
+      response.end(JSON.stringify(obj));
     }
   }
-
-  var statusCode = 200;
-
-  console.log('hi')
   response.end();
 };
 
