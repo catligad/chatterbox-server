@@ -20,20 +20,13 @@ var requestHandler = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'json';
   var statusCode;
-  // console.log('-----------', statusCode, request.method);
-  // response.writeHead(statusCode, headers);
 
-  if (request.method === 'GET') {
-    if (request.url === '/classes/messages') {
+  if (request.url === '/classes/messages') {
+    if (request.method === 'GET') {
       statusCode = 200;
       response.writeHead(statusCode, headers);
       response.end(JSON.stringify(obj));
-    } else {
-      statusCode = 404;
-      response.writeHead(statusCode, headers);
-    }
-  } else if (request.method === 'POST'){
-    if (request.url === '/classes/messages') {
+    } else if (request.method === 'POST'){
       let body = [];
       request.on('data', (chunk) => {
         body.push(chunk);
@@ -43,18 +36,18 @@ var requestHandler = function(request, response) {
       });
       statusCode = 201;
       response.writeHead(statusCode, headers);
-      console.log(statusCode, request.method);
       response.end(JSON.stringify(obj));
+    } else if (request.method === 'OPTIONS') {
+      statusCode = 200;
+      response.writeHead(statusCode, headers);
+      response.end();
     }
-  } else if (request.method === 'OPTIONS') {
-    statusCode = 200;
-    response.writeHead(statusCode, headers);
-    response.end();
   } else {
-    statusCode = 400;
+    statusCode = 404;
     response.writeHead(statusCode, headers);
     response.end();
   }
+  return;
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
