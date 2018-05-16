@@ -22,7 +22,7 @@
 
 app = {
 
-  server: 'http://parse.CAMPUS.hackreactor.com/chatterbox/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/messages',
 
   init: function() {
     // Get username
@@ -32,7 +32,6 @@ app = {
 
     // cache some dom references
     app.$text = $('#message');
-
     app.loadMsgs();
     setInterval (app.loadMsgs.bind(app), 1000);
 
@@ -76,9 +75,10 @@ app = {
   loadMsgs: function() {
     $.ajax({
       url: app.server,
-      data: { order: '-createdAt' },
+      // data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(json) {
+        console.log(json.results);
         app.displayMessages(json.results);
       },
       complete: function() {
@@ -92,7 +92,7 @@ app = {
     $.ajax({
       type: 'POST',
       url: app.server,
-      data: message,
+      data: JSON.stringify(message),
       contentType: 'application/json',
       success: function(json) {
         message.objectId = json.objectId;

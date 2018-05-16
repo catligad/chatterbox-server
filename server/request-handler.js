@@ -16,6 +16,8 @@ var obj = {
   ]
 };
 
+var objectId = 1;
+
 var requestHandler = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'json';
@@ -32,7 +34,11 @@ var requestHandler = function(request, response) {
         body.push(chunk);
       }).on('end', () => {
         body = Buffer.concat(body).toString();
-        obj.results.push(JSON.parse(body));
+        console.log('BODY-----------', body)
+        var parsedBody = JSON.parse(body);
+        parsedBody['objectId'] = objectId++;
+        console.log('PARSED-----------', parsedBody)
+        obj.results.push(parsedBody);
       });
       statusCode = 201;
       response.writeHead(statusCode, headers);
@@ -49,6 +55,7 @@ var requestHandler = function(request, response) {
     response.writeHead(statusCode, headers);
     response.end();
   }
+
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
